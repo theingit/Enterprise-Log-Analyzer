@@ -1,0 +1,10 @@
+2026-07-29 08:15:00,102 [main] INFO Application started
+2026-07-29 08:15:00,102 [main] INFO  com.example.app.Main - Application starting version 2.4.1...
+2026-07-29 08:15:00,451 [main] INFO  com.example.app.ConfigLoader - Loaded configuration file from /etc/app/config.json
+2026-07-29 08:15:01,023 [main] INFO  com.example.app.Database - Successfully connected to database at db.internal:5432
+2026-07-29 08:15:05,220 [pool-1-thread-2] WARNING com.example.app.CacheService - Redis cache response slow: latency reached 450ms
+2026-07-29 08:15:12,890 [pool-1-thread-4] INFO  com.example.app.AuthService - User ID 4920 successfully authenticated from IP 192.168.1.50
+2026-07-29 08:15:30,112 [pool-1-thread-1] WARNING com.example.app.PaymentClient - Deprecated API endpoint used: /v1/charge, switch to /v2/charge by next release
+2026-07-29 08:15:45,673 [pool-1-thread-5] ERROR com.example.app.OrderProcessor - Failed to process order #88392: Inventory service timeout after 5000ms
+2026-07-29 08:16:02,301 [main] INFO  com.example.app.MetricsReporter - Flushed 142 metrics items to monitoring collector
+2026-07-29 08:16:10,944 [pool-1-thread-3] ERROR com.example.app.Database - Query failed [SELECT * FROM users WHERE id = null]: Invalid argument syntax

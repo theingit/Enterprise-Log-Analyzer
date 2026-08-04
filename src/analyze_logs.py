@@ -1,5 +1,5 @@
 """
-Enterprise Log Analyzer v0.3
+Enterprise Log Analyzer v0.5
 
 Purpose:
 - Read application log files.
@@ -13,10 +13,19 @@ Purpose:
 -Generate a health report.
 -Organize code into reusable functions.
 
-Author: TTH
+Author: LN
 """
+import re
 from pathlib import Path
 LOG_LEVELS = ("INFO", "WARNING", "ERROR")
+LOG_PATTERN = re.compile(
+    r'^(?P<timestamp>\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2},\d{3})\s+' # Matches Date Time,ms
+    r'\[(?P<thread>[^\]]+)\]\s+'        
+    r'(?P<level>INFO|WARNING|ERROR)\s+' # Matches level + spaces. \s+: Dynamically consumes the single space after WARNING or the double spaces after INFO.
+    r'(?:(?P<component>[\w\.]+)\s+-\s+)?' # Optional component + ' - '. (?:(?P<component>[\w\.]+)\s+-\s+)?: The (?: ... )? syntax makes the entire component string section optional.
+    r'(?P<message>.*)$' # Matches the rest        
+    )
+
 
 #def read_log_file(log_file_path: Path) -> list[str] | None:
 def read_log_file(log_file_path: Path):
@@ -89,6 +98,34 @@ def print_summary(total_logs, log_counts):
     
     print("-" * 34)
 
+def parse_log_entry(line):
+  
+
+    match = LOG_PATTERN.match(line.strip())
+
+    if match:
+        data = match.groupdict()
+        # If there is no component listed, default its value to None
+        #if not data['component']:
+            #data['component'] = None
+        data["component"] = data["component"] or "N/A"
+        return data
+
+    return None
+
+
+def print_error_details(error_lines):
+    print("\nError Details")
+    for number, error_line in enumerate(error_lines, start=1):
+        parsed_log = parse_log_entry(error_line)
+        #print(parsed_log)
+        print(f"\n[{number:03}]")
+        print(f"Timestamp : {parsed_log['timestamp']}")
+        print(f"Thread    : {parsed_log['thread']}")
+        print(f"Level     : {parsed_log['level']}")
+        print(f"Component : {parsed_log['component']}")
+        print(f"Message   : {parsed_log['message']}")
+
 def main():   
 
     # Get the directory of the currently running script (src/)
@@ -106,7 +143,7 @@ def main():
     
     # 2. If file was found, print hearder and process the data
     print("=" * 34)
-    print(" Enterprise Log Analyzer v0.4")
+    print(" Enterprise Log Analyzer v0.5")
     print("=" * 34)
     print()
       
@@ -116,14 +153,13 @@ def main():
     print_summary(total_logs, log_counts) 
 
     # 4. Report Error Details    
-    if log_counts['ERROR'] > 0:
-        print("\nError Details")
+    if log_counts['ERROR'] > 0: 
         error_lines = get_error_messages(lines)
-        for line_number, error_line in enumerate(error_lines, start=1):
-            print(f"[{line_number:03}] \nTimestamp : \nComponent : \nMessage : {error_line.strip()}") 
-        print()  
+        print_error_details(error_lines)
+         
 
     # 5. Report the System Healtch
+    print()
     print_system_health(lines, log_counts) 
     
       

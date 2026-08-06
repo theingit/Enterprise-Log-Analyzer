@@ -1,5 +1,5 @@
 """
-Enterprise Log Analyzer v0.6
+Enterprise Log Analyzer v1.0
 
 Purpose:
 - Read application log files.
@@ -17,7 +17,9 @@ Author: LN
 """
 import re
 from pathlib import Path
+#declare log level constants
 LOG_LEVELS = ("INFO", "WARNING", "ERROR")
+
 LOG_PATTERN = re.compile(
     r'^(?P<timestamp>\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2},\d{3})\s+' # Matches Date Time,ms
     r'\[(?P<thread>[^\]]+)\]\s+'        
@@ -27,7 +29,7 @@ LOG_PATTERN = re.compile(
     )
 
 
-#def read_log_file(log_file_path: Path) -> list[str] | None:
+#read the log file and returns its lines.
 def read_log_file(log_file_path: Path):
 
     """Opens a file and returns its lines as a list."""    
@@ -40,6 +42,7 @@ def read_log_file(log_file_path: Path):
         print(f"Error: The file '{log_file_path}' does not exist.")
         return None
 
+"""Count INFO, WARNING and ERROR log entries."""
 def count_log_levels(log_lines):
      
      # Initialize a dictionary to store the counts
@@ -61,8 +64,7 @@ def count_log_levels(log_lines):
 
         return log_counts
 
- #Return only ERROR log entries.
-
+ #Get only ERROR log entries.
 def get_error_messages(log_lines):    
     error_lines = []
     if log_lines is not None:
@@ -72,6 +74,7 @@ def get_error_messages(log_lines):
 
     return error_lines
 
+#Print system health report.
 def print_system_health(lines, log_counts):        
     # Report System Heath Status
     if log_counts['ERROR'] > 0: 
@@ -89,6 +92,7 @@ def print_system_health(lines, log_counts):
         print("✅ System Healthy")
         print("No ERROR entries detected.")
 
+#print log summary report
 def print_summary(total_logs, log_counts):
     # 1. Report the log counts
     print("Log Analysis Report")
@@ -102,8 +106,7 @@ def print_summary(total_logs, log_counts):
     
     print("-" * 34)
 
-def parse_log_entry(line):
-  
+def parse_log_entry(line):  
 
     match = LOG_PATTERN.match(line.strip())
 
@@ -117,7 +120,7 @@ def parse_log_entry(line):
 
     return None
 
-
+#print error log details
 def print_error_details(error_lines):
     print("\nError Details")
     for number, error_line in enumerate(error_lines, start=1):
@@ -130,6 +133,7 @@ def print_error_details(error_lines):
         print(f"Component : {parsed_log['component']}")
         print(f"Message   : {parsed_log['message']}")
 
+"""Search log entries containing the specified keyword."""
 def search_logs(log_lines, keyword):    
     filtered_logs = []
     keyword = keyword.strip().lower()
@@ -138,7 +142,7 @@ def search_logs(log_lines, keyword):
             filtered_logs.append(line)
     return filtered_logs
                 
-
+#filter log entries by INFO, WARNING and ERROR.
 def filter_by_level(log_lines, level):
     log_by_level = []
     if log_lines is not None:
@@ -154,8 +158,7 @@ def main():
     current_dir = Path(__file__).resolve().parent   
 
     # Go up one level to the project root, then down into sample_log/
-    log_file_path  = current_dir.parent / "sample_logs" / "application.log"           
-    print(f"Looking for log at: {log_file_path} ..........")
+    log_file_path  = current_dir.parent / "sample_logs" / "application.log"  
     
     # 1. Read the file
     lines = read_log_file(log_file_path)
@@ -165,7 +168,7 @@ def main():
     
     # 2. If file was found, print hearder and process the data
     print("=" * 34)
-    print(" Enterprise Log Analyzer v0.6")
+    print(" Enterprise Log Analyzer v1.0")
     print("=" * 34)
     print()
       

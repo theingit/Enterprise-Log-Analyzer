@@ -1,5 +1,5 @@
 """
-Enterprise Log Analyzer v0.5
+Enterprise Log Analyzer v0.6
 
 Purpose:
 - Read application log files.
@@ -45,15 +45,19 @@ def count_log_levels(log_lines):
      # Initialize a dictionary to store the counts
         """log_counts = {'INFO': 0, 'WARNING': 0, 'ERROR': 0 }"""            
         log_counts = {level: 0 for level in LOG_LEVELS}
-                                      
-        for line in log_lines:                    
-            # Check each log level and update the dictionary count
-            if 'INFO' in line:                    
-                log_counts['INFO'] += 1
-            elif 'WARNING' in line:
-                log_counts['WARNING'] += 1
-            elif 'ERROR' in line:
-                log_counts['ERROR'] += 1
+        # Check each log level and update the dictionary count                             
+        for line in log_lines:
+            for level in LOG_LEVELS:
+                if level in line:
+                    log_counts[level] += 1
+                    break                                
+            
+            #if 'INFO' in line:                    
+            #    log_counts['INFO'] += 1
+            #elif 'WARNING' in line:
+            #    log_counts['WARNING'] += 1
+            #elif 'ERROR' in line:
+            #    log_counts['ERROR'] += 1
 
         return log_counts
 
@@ -126,6 +130,24 @@ def print_error_details(error_lines):
         print(f"Component : {parsed_log['component']}")
         print(f"Message   : {parsed_log['message']}")
 
+def search_logs(log_lines, keyword):    
+    filtered_logs = []
+    keyword = keyword.strip().lower()
+    for line in log_lines:
+        if keyword in line.lower():            
+            filtered_logs.append(line)
+    return filtered_logs
+                
+
+def filter_by_level(log_lines, level):
+    log_by_level = []
+    if log_lines is not None:
+        for line in log_lines:
+            if level.upper() in line:
+                log_by_level.append(line)                    
+    
+    return log_by_level
+
 def main():   
 
     # Get the directory of the currently running script (src/)
@@ -143,7 +165,7 @@ def main():
     
     # 2. If file was found, print hearder and process the data
     print("=" * 34)
-    print(" Enterprise Log Analyzer v0.5")
+    print(" Enterprise Log Analyzer v0.6")
     print("=" * 34)
     print()
       
@@ -161,7 +183,27 @@ def main():
     # 5. Report the System Healtch
     print()
     print_system_health(lines, log_counts) 
-    
+
+    # 6. Get log by level    
+    log_by_level = filter_by_level(lines, 'WARNING')
+    if log_by_level: #if len(log_by_level) > 0:
+        print(f"\n Warning logs")
+        for number, log in enumerate(log_by_level, start=1):
+            print(f"[{number}] {log}")
+    else:
+        print(f"\n No Warning Logs")
+   
+
+    # 7. Search log by keyword
+    keyword = input("Enter keyword:")
+    #keyword = input("Enter keyword (or 'quit' to exit)") to implement
+    filtered_logs = search_logs(lines, keyword)
+    print(f"Log result filtered by {keyword}")
+    print(f"Found {len(filtered_logs)} matching entries.")
+    if filtered_logs: #if len(filtered_logs) > 0:
+        for line_num, line in enumerate(filtered_logs, 1):
+            print(f"\nLine {line_num}: {line.strip()}")
+                       
       
 # Standard entry point to run the program
 if __name__ == "__main__":

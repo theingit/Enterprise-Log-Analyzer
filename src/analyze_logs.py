@@ -1,5 +1,5 @@
 """
-Enterprise Log Analyzer v1.0
+Enterprise Log Analyzer v0.2
 
 Purpose:
 - Read application log files.
@@ -13,7 +13,7 @@ Purpose:
 -Generate a health report.
 -Organize code into reusable functions.
 
-Author: LN
+Author: TTH
 """
 import re
 from pathlib import Path

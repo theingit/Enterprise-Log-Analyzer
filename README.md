@@ -40,24 +40,14 @@ Clone the repository
 
 ```bash
 git clone https://github.com/<username>/Enterprise-Log-Analyzer.git
+Move into the project=> cd Enterprise-Log-Analyzer
+Run=> python src/analyze_logs.py
 ```
-
-Move into the project
-
-```bash
-cd Enterprise-Log-Analyzer
-```
-
-Run
-
-```bash
-python src/analyze_logs.py
-```
-
 
 ## Sample Output
+```text
 ==================================
- Enterprise Log Analyzer v1.0
+ Enterprise Log Analyzer v0.2
 ==================================
 
 Log Analysis Report
@@ -72,6 +62,7 @@ ERROR       : 2
 System Health
 ⚠️ Warning
 2 ERROR entries detected.
+
 
 # The analyzer also displays structured error details, supports log-level filtering, and keyword searching.
 
@@ -94,9 +85,14 @@ System Health
 
 
 ## Author
-LN
-
+Thein
 Enterprise IT Bootcamp Portfolio Project
+AI Engineering Bootcamp Portfolio Project
+
+Focus:
+Enterprise Application Support
+AI-enabled IT Operations
+Solution Architecture
 
 GitHub:
 https://github.com/theingit
